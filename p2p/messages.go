@@ -14,6 +14,7 @@ const (
 	MessageNewestBlock MessageKind = iota
 	MessageAllBlocksRequest
 	MessageAllBlocksResponse
+	MessageNewBlockNotify
 )
 
 type Message struct {
@@ -50,6 +51,11 @@ func sendAllBlocks(p *peer) {
 
 }
 
+func notifyNewBlock(b *blockchain.Block, p *peer) {
+	m := makeMessage(MessageNewBlockNotify, b)
+	p.inbox <- m
+}
+
 // 이 함수는 3000번에서 먼저 실행되는데 결국 4000번을 위해 실행
 func handleMsg(m *Message, p *peer) {
 	switch m.Kind {
@@ -77,6 +83,8 @@ func handleMsg(m *Message, p *peer) {
 		var payload []*blockchain.Block
 		utils.HandleErr(json.Unmarshal(m.Payload, &payload))
 		blockchain.BlockChain().Replace(payload)
+	case MessageNewBlockNotify:
+
 	}
 	//fmt.Printf("Peer: %s, Sent a message with of: %d", p.key, m.Kind)
 }

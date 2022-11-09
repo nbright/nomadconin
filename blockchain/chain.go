@@ -38,12 +38,13 @@ var once sync.Once
 func (b *blockChain) restore(data []byte) {
 	utils.FromBytes(b, data)
 }
-func (b *blockChain) AddBlock() {
+func (b *blockChain) AddBlock() *Block {
 	block := createBlock(b.NewestHash, b.Height+1, getDifficulty(b))
 	b.NewestHash = block.Hash
 	b.Height = block.Height
 	b.CurrentDifficulty = block.Difficulty
 	persistBlockchain(b)
+	return block
 }
 
 func persistBlockchain(b *blockChain) {

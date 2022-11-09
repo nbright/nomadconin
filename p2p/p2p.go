@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/nbright/nomadcoin/blockchain"
 	"github.com/nbright/nomadcoin/utils"
 )
 
@@ -43,6 +44,12 @@ func AddPeer(address, port, openPort string) {
 	//time.Sleep(5 * time.Second)
 	//peer.inbox <- []byte("Hello from 4000!")
 	//conn.WriteMessage(websocket.TextMessage, []byte("Hello from Port 4000!"))
+}
+
+func BroadcastNewBlock(b *blockchain.Block) {
+	for _, p := range Peers.v {
+		notifyNewBlock(b, p)
+	}
 }
 
 /** 아주 중요,서버에서  메시지 읽어서, 보내기

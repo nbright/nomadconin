@@ -115,7 +115,8 @@ func blocks(rw http.ResponseWriter, r *http.Request) {
 	case "POST":
 		// var addBlockBody addBlockBody
 		// utils.HandleErr(json.NewDecoder(r.Body).Decode(&addBlockBody))
-		blockchain.BlockChain().AddBlock()
+		newBlock := blockchain.BlockChain().AddBlock()
+
 		rw.WriteHeader(http.StatusCreated)
 	}
 }
